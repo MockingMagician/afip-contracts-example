@@ -14,4 +14,5 @@ interface LevelInterface
     ];
 
     public function getLevel(): string;
+    public function getMaxAttempts(): string;
 }
