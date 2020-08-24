@@ -4,6 +4,8 @@
 namespace Afip\NumberGame;
 
 
+use Afip\NumberGame\Contracts\ErrorManagerInterface;
+use Afip\NumberGame\Contracts\GameErrorInterface;
 use Afip\NumberGame\Contracts\GameInterface;
 use Afip\NumberGame\Contracts\HelperInterface;
 use Afip\NumberGame\Contracts\LevelInterface;
@@ -39,51 +41,100 @@ class Game implements GameInterface
      */
     private $level;
 
+    private const FAIL_END_MESSAGE = "After %s attempts, you don't find the number `%s`";
+    private const SUCCESS_END_MESSAGE = "Tada! You find the number `%s` after %s attempt, so a genius";
+    /**
+     * @var ErrorManagerInterface
+     */
+    private $errorManager;
 
-    public function __construct(HelperInterface $helper,  int $minToFind,  int $maxToFind)
-    {
+
+    public function __construct(
+        HelperInterface $helper,
+        LevelInterface $level,
+        ErrorManagerInterface $errorManager,
+        int $minToFind,
+        int $maxToFind
+    ) {
         $this->min = $minToFind;
         $this->max = $maxToFind;
         $this->helper = $helper;
+        $this->level = $level;
+        $this->errorManager = $errorManager;
     }
 
     public function start(): void
     {
         $this->selectLevel();
-        $this->helper->output(sprintf('Devine un nombre entre %s et %s', $this->min, $this->max));
+        $this->helper->output(sprintf('Guess a number between %s and %s', $this->min, $this->max));
         $this->mysteryNumber = $this->helper->getRandomNumberBetween($this->min, $this->max);
         $this->turn();
     }
 
     private function selectLevel()
     {
-        $level = $this->helper->getInput(sprintf(
-            'Choisi ton niveau de difficulté: %s',
-            implode(',', LevelInterface::levels)
-        ));
+        while(true) {
+            $level = $this->helper->getInput(sprintf(
+                'Choose level difficulty: %s',
+                implode(',', LevelInterface::levels)
+            ));
+
+            try {
+                $this->level->setLevel($level);
+            } catch (GameErrorInterface $exception) {
+                $this->helper->output($exception->getMessage());
+                continue;
+            }
+
+            break;
+        }
     }
 
-    private function turn()
+    private function turn(): void
     {
-        $this->ItIsFinished();
-        /**
-         * Ici un tour doit se jouer
-         */
+        if ($this->maxAttemptReached()) {
+            $this->end(sprintf(self::FAIL_END_MESSAGE, $this->countAttempts, $this->mysteryNumber));
+        }
+
+        do {
+            $numberToTry = $this->helper->getInput('Give a try number: ');
+
+            try {
+                $this->errorManager->checkInput($numberToTry);
+            } catch (GameErrorInterface $exception) {
+                $this->helper->output($exception->getMessage());
+                continue;
+            }
+
+            break;
+        } while(true);
+
+        $this->countAttempts++;
+
+        if ($this->mysteryNumber === $numberToTry) {
+            return $this->end(sprintf(self::SUCCESS_END_MESSAGE, $this->mysteryNumber, $this->countAttempts));
+        }
+
+        $this->helper->output(sprintf('%s is not the mysterious number', $numberToTry));
+
+        $this->turn();
     }
 
     private function end(string $message)
     {
-        /**
-         * Ici on peut dire au revoir à l'utilisateur
-         */
+        $this->helper->output($message);
     }
 
-    private function ItIsFinished(): bool
+    private function maxAttemptReached(): bool
     {
-        if ($this->level->getLevel() === LevelInterface::levels[0] /*easy*/) {
+        if ($this->level->getMaxAttempts() < 1) {
             return false;
         }
 
+        if ($this->countAttempts < $this->level->getMaxAttempts()) {
+            return false;
+        }
 
+        return true;
     }
 }
