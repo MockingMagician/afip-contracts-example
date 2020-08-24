@@ -5,7 +5,7 @@ namespace Afip\NumberGame;
 
 
 use Afip\NumberGame\Contracts\ErrorManagerInterface;
-use Afip\NumberGame\Contracts\GameErrorInterface;
+use Afip\NumberGame\Contracts\LevelInterface;
 
 class ErrorManager implements ErrorManagerInterface
 {
@@ -29,10 +29,10 @@ class ErrorManager implements ErrorManagerInterface
      */
     public function checkLevel(string $level): void
     {
-        if (!in_array($level, ['easy', 'medium', 'easy'])) {
+        if (!in_array($level, LevelInterface::levels)) {
             throw new GameError(sprintf(
                 'Level must be one of %s',
-                implode(', ', ['easy', 'medium', 'hard'])
+                implode(', ', LevelInterface::levels)
             ));
         }
     }
