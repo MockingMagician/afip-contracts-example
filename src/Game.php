@@ -41,8 +41,8 @@ class Game implements GameInterface
      */
     private $level;
 
-    private const FAIL_END_MESSAGE = "After %s attempts, you don't find the number `%s`";
-    private const SUCCESS_END_MESSAGE = "Tada! You find the number `%s` after %s attempt, so a genius";
+    private const FAIL_END_MESSAGE = "After %s attempts, you don't find the number `%s`\n";
+    private const SUCCESS_END_MESSAGE = "Tada! You find the number `%s` after %s attempt, so a genius!\n";
     /**
      * @var ErrorManagerInterface
      */
@@ -66,7 +66,7 @@ class Game implements GameInterface
     public function start(): void
     {
         $this->selectLevel();
-        $this->helper->output(sprintf('Guess a number between %s and %s', $this->min, $this->max));
+        $this->helper->output(sprintf("Guess a number between %s and %s\n", $this->min, $this->max));
         $this->mysteryNumber = $this->helper->getRandomNumberBetween($this->min, $this->max);
         $this->turn();
     }
@@ -75,14 +75,14 @@ class Game implements GameInterface
     {
         while(true) {
             $level = $this->helper->getInput(sprintf(
-                'Choose level difficulty: %s',
-                implode(',', LevelInterface::levels)
+                'Choose level difficulty: %s: ',
+                implode(', ', LevelInterface::levels)
             ));
 
             try {
                 $this->level->setLevel($level);
             } catch (GameErrorInterface $exception) {
-                $this->helper->output($exception->getMessage());
+                $this->helper->output($exception->getMessage()."\n");
                 continue;
             }
 
@@ -102,7 +102,7 @@ class Game implements GameInterface
             try {
                 $this->errorManager->checkInput($numberToTry);
             } catch (GameErrorInterface $exception) {
-                $this->helper->output($exception->getMessage());
+                $this->helper->output($exception->getMessage()."\n");
                 continue;
             }
 
@@ -111,11 +111,16 @@ class Game implements GameInterface
 
         $this->countAttempts++;
 
-        if ($this->mysteryNumber === $numberToTry) {
-            return $this->end(sprintf(self::SUCCESS_END_MESSAGE, $this->mysteryNumber, $this->countAttempts));
+        if ($this->mysteryNumber === (int)$numberToTry) {
+            $this->end(sprintf(self::SUCCESS_END_MESSAGE, $this->mysteryNumber, $this->countAttempts));
+            return;
         }
 
-        $this->helper->output(sprintf('%s is not the mysterious number', $numberToTry));
+        $clue = 'lower';
+        if ($this->mysteryNumber > $numberToTry) {
+            $clue = 'bigger';
+        }
+        $this->helper->output(sprintf("%s is not the mysterious number. Try %s\n", $numberToTry, $clue));
 
         $this->turn();
     }
