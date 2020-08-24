@@ -43,7 +43,7 @@ class ErrorManager implements ErrorManagerInterface
     public function checkInput(string $input): void
     {
         if (!$this->stringIsAnInteger($input)) {
-            throw new GameError('Do you think "%s" really looks like a number ?');
+            throw new GameError('Do you think "%s" really looks like a number ?', $input);
         }
     }
 
