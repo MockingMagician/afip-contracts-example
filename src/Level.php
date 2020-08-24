@@ -47,7 +47,7 @@ class Level implements LevelInterface
     /**
      * @inheritDoc
      */
-    public function setLevel(string $level)
+    public function setLevel(string $level): void
     {
         $this->errorManager->checkLevel($level);
         $this->level = $level;
