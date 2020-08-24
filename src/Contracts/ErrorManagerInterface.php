@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
-
 namespace Afip\NumberGame\Contracts;
 
-
+/**
+ * Interface ErrorManagerInterface
+ * @package Afip\NumberGame\Contracts
+ *
+ * Check the validity of user inputs
+ */
 interface ErrorManagerInterface
 {
     /**

@@ -8,7 +8,7 @@ namespace Afip\NumberGame\Contracts;
  * Interface LevelInterface
  * @package Afip\NumberGame\Contracts
  *
- * Define level design
+ * Define the design of a level object
  */
 interface LevelInterface
 {
