@@ -12,6 +12,10 @@ class Game implements GameInterface
     /**
      * @var int
      */
+    private $mysteryNumber;
+    /**
+     * @var int
+     */
     private $min;
     /**
      * @var int
@@ -21,6 +25,10 @@ class Game implements GameInterface
      * @var HelperInterface
      */
     private $helper;
+    /**
+     * @var int
+     */
+    private $countAttempts = 0;
 
     public function __construct(string $level, int $min, int $max, HelperInterface $helper)
     {
@@ -29,9 +37,10 @@ class Game implements GameInterface
         $this->helper = $helper;
     }
 
-
     public function start(): void
     {
         $this->helper->output(sprintf('Devine un nombre entre %s et %s', $this->min, $this->max));
+        $this->mysteryNumber = $this->helper->getRandomNumberBetween($this->min, $this->max);
+        $this->helper->getInput()
     }
 }
