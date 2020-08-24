@@ -4,6 +4,7 @@
 namespace Afip\NumberGame;
 
 
+use Afip\NumberGame\Contracts\HelperInterface;
 use Afip\NumberGame\Contracts\LevelInterface;
 
 class Level implements LevelInterface
@@ -13,23 +14,20 @@ class Level implements LevelInterface
      */
     private $level;
     /**
-     * @var int
+     * @var int[]
      */
-    private $maxAttemptForEasy;
+    private $maxAttempts = [];
     /**
-     * @var int
+     * @var HelperInterface
      */
-    private $maxAttemptForMedium;
-    /**
-     * @var int
-     */
-    private $maxAttemptForHard;
+    private $helper;
 
-    public function __construct(int $maxAttemptForEasy, int $maxAttemptForMedium, int $maxAttemptForHard)
+    public function __construct(HelperInterface $helper, int $maxAttemptForEasy, int $maxAttemptForMedium, int $maxAttemptForHard)
     {
-        $this->maxAttemptForEasy = $maxAttemptForEasy;
-        $this->maxAttemptForMedium = $maxAttemptForMedium;
-        $this->maxAttemptForHard = $maxAttemptForHard;
+        $this->maxAttempts[self::levels[0]] = $maxAttemptForEasy;
+        $this->maxAttempts[self::levels[1]] = $maxAttemptForMedium;
+        $this->maxAttempts[self::levels[2]] = $maxAttemptForHard;
+        $this->helper = $helper;
     }
 
     public function getLevel(): string
@@ -39,11 +37,11 @@ class Level implements LevelInterface
 
     public function setLevel(string $level): string
     {
-        // TODO: Implement setLevel() method.
+
     }
 
     public function getMaxAttempts(): string
     {
-        // TODO: Implement getMaxAttempts() method.
+        return $this->maxAttempts[$this->level];
     }
 }
