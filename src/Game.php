@@ -41,6 +41,20 @@ class Game implements GameInterface
     {
         $this->helper->output(sprintf('Devine un nombre entre %s et %s', $this->min, $this->max));
         $this->mysteryNumber = $this->helper->getRandomNumberBetween($this->min, $this->max);
-        $this->helper->getInput()
+        $this->turn();
+    }
+
+    private function turn()
+    {
+        /**
+         * Ici un tour doit se jouer
+         */
+    }
+
+    private function end()
+    {
+        /**
+         * Ici on peut dire au revoir à l'utilisateur
+         */
     }
 }
