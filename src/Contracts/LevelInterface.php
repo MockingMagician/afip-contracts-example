@@ -13,7 +13,7 @@ interface LevelInterface
         'hard'
     ];
 
-    public function setLevel(): string;
+    public function setLevel(string $level): string;
     public function getLevel(): string;
     public function getMaxAttempts(): string;
 }
