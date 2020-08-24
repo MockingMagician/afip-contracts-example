@@ -20,10 +20,9 @@ interface LevelInterface
 
     /**
      * @param string $level
-     * @return string
      * @throws GameErrorInterface
      */
-    public function setLevel(string $level): string;
+    public function setLevel(string $level): void;
     public function getLevel(): string;
     public function getMaxAttempts(): string;
 }
