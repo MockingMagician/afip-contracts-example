@@ -12,6 +12,6 @@ namespace Afip\NumberGame\Contracts;
 interface HelperInterface
 {
     public static function getRandomNumberBetween(int $min, int $max): int;
-    public static function getInput(string $toPromptBeforeInput): string;
+    public static function getInput(?string $toPromptBeforeInput): string;
     public static function output(string $toPrompt);
 }
