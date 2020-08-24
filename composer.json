@@ -2,19 +2,22 @@
     "name": "afip/contracts-example",
     "description": "An exercie about contracts and implementations",
     "type": "program",
-    "autoload": {
-        "psr-4": {
-            "Afip\\NumberGame\\": "src"
-        }
-    },
-    "require-dev": {
-        "phpunit/phpunit": "7"
-    },
     "license": "mit",
     "authors": [
         {
             "name": "Marc MOREAU",
             "email": "moreau.marc.web@gmail.com"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-4": {
+            "Afip\\NumberGame\\": "src"
+        }
+    },
+    "require": {
+        "ext-readline": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "7"
+    }
 }
