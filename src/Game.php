@@ -47,20 +47,20 @@ class Game implements GameInterface
         $this->helper = $helper;
     }
 
-    public function setLevel(LevelInterface $level)
+    public function start(): void
     {
-        $this->level = $level;
+        $this->selectLevel();
+        $this->helper->output(sprintf('Devine un nombre entre %s et %s', $this->min, $this->max));
+        $this->mysteryNumber = $this->helper->getRandomNumberBetween($this->min, $this->max);
+        $this->turn();
     }
 
-    public function start(): void
+    private function selectLevel()
     {
         $level = $this->helper->getInput(sprintf(
             'Choisi ton niveau de difficulté: %s',
             implode(',', LevelInterface::levels)
         ));
-        $this->helper->output(sprintf('Devine un nombre entre %s et %s', $this->min, $this->max));
-        $this->mysteryNumber = $this->helper->getRandomNumberBetween($this->min, $this->max);
-        $this->turn();
     }
 
     private function turn()
