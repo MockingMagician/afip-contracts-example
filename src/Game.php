@@ -41,18 +41,23 @@ class Game implements GameInterface
      */
     private $level;
 
-    private const FAIL_END_MESSAGE = "After %s attempts, you don't find the number `%s`\n";
+    private const FAIL_END_MESSAGE = "Fail! After %s attempts, you miserably don't find the number `%s`\n";
     private const SUCCESS_END_MESSAGE = "Tada! You find the number `%s` after %s attempt, so a genius!\n";
     /**
      * @var ErrorManagerInterface
      */
     private $errorManager;
+    /**
+     * @var ColorsHelpers
+     */
+    private $colorsHelpers;
 
 
     public function __construct(
         HelperInterface $helper,
         LevelInterface $level,
         ErrorManagerInterface $errorManager,
+        ColorsHelpers $colorsHelpers,
         int $minToFind,
         int $maxToFind
     ) {
@@ -61,6 +66,7 @@ class Game implements GameInterface
         $this->helper = $helper;
         $this->level = $level;
         $this->errorManager = $errorManager;
+        $this->colorsHelpers = $colorsHelpers;
     }
 
     public function start(): void
@@ -75,8 +81,19 @@ class Game implements GameInterface
     {
         while(true) {
             $level = $this->helper->getInput(sprintf(
-                'Choose level difficulty: %s: ',
-                implode(', ', LevelInterface::levels)
+                "Choose level difficulty: %s: ",
+                implode(', ', array_map(function ($value) {
+                    $color = $value === LevelInterface::levels[0]
+                        ? 'green'
+                        : (
+                            $value === LevelInterface::levels[1]
+                            ? 'yellow'
+                            : 'red'
+                        )
+                    ;
+                    return $this->colorsHelpers->getColoredString($value, $color);
+
+                }, LevelInterface::levels))
             ));
 
             try {
@@ -94,10 +111,11 @@ class Game implements GameInterface
     {
         if ($this->maxAttemptReached()) {
             $this->end(sprintf(self::FAIL_END_MESSAGE, $this->countAttempts, $this->mysteryNumber));
+            return;
         }
 
         do {
-            $numberToTry = $this->helper->getInput('Give a try number: ');
+            $numberToTry = $this->helper->getInput("\nGive a try number: ");
 
             try {
                 $this->errorManager->checkInput($numberToTry);
@@ -116,10 +134,11 @@ class Game implements GameInterface
             return;
         }
 
-        $clue = 'lower';
+        $clue = $this->colorsHelpers->getColoredString('lower', 'blue');
         if ($this->mysteryNumber > $numberToTry) {
-            $clue = 'bigger';
+            $clue = $this->colorsHelpers->getColoredString('bigger', 'red');
         }
+        $numberToTry = $this->colorsHelpers->getColoredString($numberToTry, 'yellow');
         $this->helper->output(sprintf("%s is not the mysterious number. Try %s\n", $numberToTry, $clue));
 
         $this->turn();

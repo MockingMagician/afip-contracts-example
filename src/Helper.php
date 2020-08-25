@@ -15,7 +15,10 @@ class Helper implements HelperInterface
 
     public function getInput(?string $toPromptBeforeInput = null): string
     {
-        return readline($toPromptBeforeInput);
+        if ($toPromptBeforeInput) {
+            echo $toPromptBeforeInput;
+        }
+        return readline();
     }
 
     public function output(string $toPrompt)

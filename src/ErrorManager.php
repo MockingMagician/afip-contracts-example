@@ -17,11 +17,16 @@ class ErrorManager implements ErrorManagerInterface
      * @var int
      */
     private $max;
+    /**
+     * @var ColorsHelpers
+     */
+    private $colorsHelpers;
 
-    public function __construct(int $min, int $max)
+    public function __construct(ColorsHelpers $colorsHelpers, int $min, int $max)
     {
         $this->min = $min;
         $this->max = $max;
+        $this->colorsHelpers = $colorsHelpers;
     }
 
     /**
@@ -43,7 +48,8 @@ class ErrorManager implements ErrorManagerInterface
     public function checkInput(string $input): void
     {
         if (!$this->stringIsAnInteger($input)) {
-            throw new GameError('Do you think "%s" really looks like a number ?', $input);
+            $msg = $this->colorsHelpers->getColoredString("'%s'", 'red');
+            throw new GameError(sprintf('Do you think '.$msg.' really looks like a number ?', $input));
         }
     }
 
