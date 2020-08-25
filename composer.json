@@ -8,7 +8,12 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "7"
+        "phpunit/phpunit": "^7"
+    },
+"config": {
+        "preferred-install": "dist",
+        "disable-tls": true,
+        "secure-http": false
     },
     "license": "mit",
     "authors": [
@@ -16,5 +21,8 @@
             "name": "Marc MOREAU",
             "email": "moreau.marc.web@gmail.com"
         }
-    ]
+    ],
+    "require": {
+        "phpunit/phpunit-mock-objects": "^6.1"
+    }
 }
