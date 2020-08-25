@@ -18,7 +18,7 @@ class ErrorManager implements ErrorManagerInterface
     {
         if (!in_array($level, LevelInterface::levels))
         {
-            throw new GameError();
+            throw new GameError("Le free style n'est pas permis !!!!");
         }
     }
 
@@ -26,7 +26,7 @@ class ErrorManager implements ErrorManagerInterface
     {
         if (!preg_match(self::REGEX, $input))
         {
-            throw new GameError("") ;
+            throw new GameError("Heu... t'as rippé ? Ou t'as besoin de lunettes ?") ;
         }
     }
 }
