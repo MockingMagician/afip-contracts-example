@@ -20,7 +20,7 @@ public function __constrcut()
     $this->_Helper = new Helper();
     $this->_Error  = new ErrorManager();
     $this->_Level = new Level();
-    $this->number = $helper-> getRandomNumberBetween(0,100);
+    $this->number = $this->_Helper-> getRandomNumberBetween(0,100);
     $this->start();
 }
 
