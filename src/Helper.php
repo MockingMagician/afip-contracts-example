@@ -4,7 +4,7 @@ namespace Afip\NumberGame;
 
 use Afip\NumberGame\Contracts\HelperInterface;
 
-class helper implements HelperInterface
+class Helper implements HelperInterface
 {
     public function getRandomNumberBetween(int $min, int $max): int
     {
