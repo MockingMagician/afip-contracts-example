@@ -47,7 +47,7 @@ public function __constrcut()
             $this->_Error->checkLevel($levelEntered);
             $this->_Level->setLevel($levelEntered);
             $turns =  $this->_Level->getMaxAttempts();
-            return parseInt($turns);
+            return $turns;
 
         }catch (Exception $e) {
             $this->_Helper->output($e->getMessage());
