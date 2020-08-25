@@ -1,4 +1,3 @@
 <?php
 require 'Game.php';
-$r = new Game;
-$r->start();
+$r = new Game();
