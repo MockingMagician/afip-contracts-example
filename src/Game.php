@@ -31,10 +31,6 @@ class Game implements GameInterface
     /**
      * @var int
      */
-    private $maxAttempts = 0;
-    /**
-     * @var int
-     */
     private $countAttempts = 0;
     /**
      * @var LevelInterface
