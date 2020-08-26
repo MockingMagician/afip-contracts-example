@@ -47,9 +47,19 @@ class ErrorManager implements ErrorManagerInterface
      */
     public function checkInput(string $input): void
     {
+        $coloredInput = $this->colorsHelpers->getColoredString($input, 'red');
+
         if (!$this->stringIsAnInteger($input)) {
-            $msg = $this->colorsHelpers->getColoredString("'%s'", 'red');
-            throw new GameError(sprintf('Do you think '.$msg.' really looks like a number ?', $input));
+            throw new GameError(sprintf('Do you think `%s` really looks like a number ?', $coloredInput));
+        }
+
+        if ($input > $this->max || $input < $this->min) {
+            throw new GameError(sprintf(
+                '`%s` should be between range %s and %s',
+                $coloredInput,
+                $this->min,
+                $this->max
+            ));
         }
     }
 

@@ -53,7 +53,7 @@ class Level implements LevelInterface
         $this->level = $level;
     }
 
-    public function getMaxAttempts(): string
+    public function getMaxAttempts(): int
     {
         return $this->maxAttempts[$this->level];
     }

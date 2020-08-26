@@ -12,6 +12,9 @@ use Afip\NumberGame\Contracts\LevelInterface;
 
 class Game implements GameInterface
 {
+    private const FAIL_END_MESSAGE = "After %s attempts, you miserably fail to find the number `%s`\n";
+    private const SUCCESS_END_MESSAGE = "Tada! You find the number `%s` after %s attempt, so a genius!\n";
+
     /**
      * @var int
      */
@@ -36,9 +39,6 @@ class Game implements GameInterface
      * @var LevelInterface
      */
     private $level;
-
-    private const FAIL_END_MESSAGE = "Fail! After %s attempts, you miserably don't find the number `%s`\n";
-    private const SUCCESS_END_MESSAGE = "Tada! You find the number `%s` after %s attempt, so a genius!\n";
     /**
      * @var ErrorManagerInterface
      */
@@ -47,7 +47,6 @@ class Game implements GameInterface
      * @var ColorsHelpers
      */
     private $colorsHelpers;
-
 
     public function __construct(
         HelperInterface $helper,
@@ -106,7 +105,11 @@ class Game implements GameInterface
     private function turn(): void
     {
         if ($this->maxAttemptReached()) {
-            $this->end(sprintf(self::FAIL_END_MESSAGE, $this->countAttempts, $this->mysteryNumber));
+            $this->end($this->colorsHelpers->getColoredString(sprintf(
+                self::FAIL_END_MESSAGE,
+                $this->countAttempts,
+                $this->mysteryNumber
+            ), 'red'));
             return;
         }
 
@@ -126,7 +129,11 @@ class Game implements GameInterface
         $this->countAttempts++;
 
         if ($this->mysteryNumber === (int)$numberToTry) {
-            $this->end(sprintf(self::SUCCESS_END_MESSAGE, $this->mysteryNumber, $this->countAttempts));
+            $this->end($this->colorsHelpers->getColoredString(sprintf(
+                self::SUCCESS_END_MESSAGE,
+                $this->mysteryNumber,
+                $this->countAttempts
+            ), 'green'));
             return;
         }
 
@@ -143,6 +150,33 @@ class Game implements GameInterface
     private function end(string $message)
     {
         $this->helper->output($message);
+        $this->restart();
+    }
+
+    private function restart(): void
+    {
+        do {
+            $response = $this->helper->getInput(sprintf(
+                "\nDo you want to replay ? yes(%s) / no(%s): ",
+                $this->colorsHelpers->getColoredString('y', 'green'),
+                $this->colorsHelpers->getColoredString('n', 'red')
+            ));
+
+            if (!in_array($response, ['y', 'n'])) {
+                $this->helper->output(sprintf("Hmmm, I don't understand `%s`", $response));
+                continue;
+            }
+
+            break;
+        } while(true);
+
+        if ($response === 'y') {
+            $this->countAttempts = 0;
+            $this->start();
+            return;
+        }
+
+        $this->helper->output("See you. Bye!\n");
     }
 
     private function maxAttemptReached(): bool
